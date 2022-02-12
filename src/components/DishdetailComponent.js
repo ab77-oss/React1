@@ -4,11 +4,12 @@ import { Card, CardImg, CardText, CardBody,
     Label, Modal, ModalHeader, ModalBody, Row,Col} from 'reactstrap';
 import {Control, LocalForm, Errors} from 'react-redux-form';    
 import { Link } from 'react-router-dom';
-import { render } from 'react-dom';
+import { Loading } from './LoadingComponent';
+
 
 const maxLength= (len) => (val) => !(val) ||  (val.length <= len);
 const minLenght= (len) => (val) => (val) && (val.length>=len);
-const required=(val) => val && val.length;
+
 
 function RenderDish({dish}){
     return (
@@ -52,8 +53,10 @@ function RenderComments({comments, addComment, dishId}){
 
         constructor(props){
             super(props);
+
             this.toggleModal=this.toggleModal.bind(this);
             this.handleSubmit=this.handleComment.bind(this);
+            
             this.state={
                 Modal:false
             }
@@ -97,7 +100,7 @@ function RenderComments({comments, addComment, dishId}){
                                            
                                             className="form-control"
                                             validators={{
-                                            required, minLenght: minLenght(3), maxLength:maxLength(15)
+                                            minLenght: minLenght(3), maxLength:maxLength(15)
                                             }}
                                         />
                                     <Errors
@@ -137,6 +140,24 @@ function RenderComments({comments, addComment, dishId}){
 
 
     const DishDetail=(props)=>{
+        if(props.isLoading){
+            return(
+                <div className="container">
+                    <div className="row">
+                        <Loading />
+                    </div>
+                </div>
+            );
+        }
+        else if (props.errMess){
+            return(
+                <div className="container">
+                    <div className="row">
+                        <h4>{props.errMess}</h4>
+                    </div>
+                </div>
+            );
+        }
         if(props.dish!=null){ 
                 return(
                     <div className="container">
