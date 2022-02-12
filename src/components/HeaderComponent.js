@@ -1,25 +1,26 @@
+import React, {Component} from 'react';
 import { Nav, Navbar, NavbarBrand, NavbarToggler, Collapse, NavItem,
     Button, Modal, ModalHeader, ModalBody, Form, FormGroup,
     Label, Input} from 'reactstrap';
 
 import { NavLink } from 'react-router-dom';
-import React, {Component} from 'react';
+
 
 class Header extends Component {
-constructor(props) {
-    super(props);
+    constructor(props) {
+        super(props);
 
-    this.toggleNav = this.toggleNav.bind(this);
-    this.toggleModal=this.toggleModal.bind(this);
-    this.handleLogin=this.handleLogin.bind(this);
+        this.toggleNav = this.toggleNav.bind(this);
+        this.toggleModal=this.toggleModal.bind(this);
+        this.handleLogin=this.handleLogin.bind(this);
 
-    this.state = {
-      isNavOpen: false,
-      isModalOpen:false
-    };
-  }
+        this.state = {
+        isNavOpen: false,
+        isModalOpen:false
+        };
+    }
 
-  toggleNav() {
+    toggleNav() {
     this.setState({
       isNavOpen: !this.state.isNavOpen
     });
