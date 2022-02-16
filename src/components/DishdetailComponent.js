@@ -6,6 +6,7 @@ import {Control, LocalForm, Errors} from 'react-redux-form';
 import { Link } from 'react-router-dom';
 import { Loading } from './LoadingComponent';
 import { baseUrl } from '../shared/baseUrl';
+import {FadeTransform, Fade, Stagger} from 'react-animation-components'
 
 
 const maxLength= (len) => (val) => !(val) ||  (val.length <= len);
@@ -19,7 +20,7 @@ const minLenght= (len) => (val) => (val) && (val.length>=len);
             super(props);
 
             this.toggleModal=this.toggleModal.bind(this);
-            this.handleSubmit=this.handleComment.bind(this);
+            this.handleSubmit=this.handleSubmit.bind(this);
             
             this.state={
                 Modal:false
@@ -38,8 +39,8 @@ const minLenght= (len) => (val) => (val) && (val.length>=len);
             render(){
                 return(
                    <div>
-                    <Button outline onClick={this.toggleModal}  color="light" className="border-dark">
-                        <span className="fa fa-comments fa-lg"></span> Submit Comment</Button>
+                    <Button onClick={this.toggleModal}  color="light" className="border-dark">
+                        <span className="fa fa-edit fa-lg"></span> Submit Comment</Button>
                     <Modal isOpen={this.state.Modal} toggle={this.toggleModal}>
                         <ModalHeader toggle={this.toggleModal}>Submit Comment</ModalHeader>
                         <ModalBody>       
@@ -106,13 +107,18 @@ const minLenght= (len) => (val) => (val) && (val.length>=len);
             if (dish!=null){
             return (
                    <div>
-                       <Card >
-                           <CardImg  src={baseUrl + dish.image} alt={dish.name} />
-                           <CardBody>
-                               <CardTitle>{dish.name}</CardTitle>
-                               <CardText>{dish.description}</CardText>
-                           </CardBody>
-                       </Card>
+                       <FadeTransform in 
+                        transformProps={{
+                            exitTransform: 'scale(0.5) translateY(-50%)'
+                            }}>
+                            <Card >
+                                <CardImg top src={baseUrl + dish.image} alt={dish.name} />
+                                <CardBody>
+                                    <CardTitle>{dish.name}</CardTitle>
+                                    <CardText>{dish.description}</CardText>
+                                </CardBody>
+                            </Card>
+                       </FadeTransform>
                    </div>
             );
         }else{
@@ -122,24 +128,27 @@ const minLenght= (len) => (val) => (val) && (val.length>=len);
     }            
         
         function RenderComments({comments, postComment, dishId}){
-            if (comments!=null){
-                const commentLis=this.props.comments.map(comment=>{
-                    return(
-                        <li key={comment.id}>
-                            <p>{comment.comment}</p>
-                            <p>-- {comment.author} , {new Intl.DateTimeFormat('en-US', {year:'numeric',month:'short',day:'2-digit'}).format(new Date(Date.parse(comment.date)))}</p>
-                        </li>
-                    );
-                });
+            if (comments!=null){ 
                 return( 
                         <div>
                             <h4>Comments</h4>
                             <ul className="list-unstyled">
-                                {commentLis}
+                                <Stagger in>
+                                    {comments.map((comment)=>{ 
+                                    return(
+                                        <Fade in>
+                                            <li key={comment.id}>
+                                            <p>{comment.comment}</p>
+                                            <p>-- {comment.author} , {new Intl.DateTimeFormat('en-US', {year:'numeric',month:'short',day:'2-digit'}).format(new Date(Date.parse(comment.date)))}</p>
+                                            </li>
+                                        </Fade>
+                                        );
+                                    })}
+                                </Stagger>
                             </ul>
                             <CommentForm dishId={dishId} postComment={postComment} />
                         </div>
-                ) } else{
+                )}  else{
                     return (<div></div>
                         );
                 }  
